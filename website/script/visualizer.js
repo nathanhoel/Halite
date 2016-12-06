@@ -74,10 +74,6 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
             TER_TOP = sh * 0.095, TER_BTM = sh * 0.36, PROD_TOP = sh * 0.41, PROD_BTM = sh * 0.675, STR_TOP = sh * 0.725, STR_BTM = sh * 0.99;
             //Create the text for rendering the terrritory, strength, and prod graphs.
             stage.removeChildren();
-            terText = new PIXI.Text('Territory', { font: (sh / 32).toString() + 'px Arial', fill: 0xffffff });
-            terText.anchor = new PIXI.Point(0, 1);
-            terText.position = new PIXI.Point(mw + sh / 32, TER_TOP - sh * 0.005);
-            stage.addChild(terText);
             prodText = new PIXI.Text('Production', { font: (sh / 32).toString() + 'px Arial', fill: 0xffffff });
             prodText.anchor = new PIXI.Point(0, 1);
             prodText.position = new PIXI.Point(mw + sh / 32, PROD_TOP - sh * 0.005);
@@ -90,6 +86,10 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
             infoText.anchor = new PIXI.Point(0, 1);
             infoText.position = new PIXI.Point(mw + sh / 32, TER_TOP - sh * 0.05);
             stage.addChild(infoText);
+            infoText2 = new PIXI.Text('Position (x/y): ', { font: (sh / 32).toString() + 'px Arial', fill: 0xffffff });
+            infoText2.anchor = new PIXI.Point(0, 1);
+            infoText2.position = new PIXI.Point(mw + sh / 32, TER_TOP - sh * 0.005);
+            stage.addChild(infoText2);
             stage.addChild(graphGraphics);
         }
         stage.addChild(mapGraphics);
@@ -314,7 +314,7 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
             var time = Date.now();
             var dt = time - lastTime;
             lastTime = time;
-            
+
             // If we are embedding a game,
             // we want people to be able to scroll with
             // the arrow keys
@@ -345,6 +345,7 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
             var mousepos = manager.mouse.global;
             if(!mousePressed || mousepos.x < 0 || mousepos.x > sw || mousepos.y < 0 || mousepos.y > sh) { //Mouse is not over renderer.
                 infoText.text = 'Frame #' + frame.toString();
+                infoText2.text = 'Position (x/y):';
             }
             else { //Mouse is clicked and over renderer.
                 if(mousepos.x < mw && mousepos.y < mh) { //Over map:
@@ -354,6 +355,7 @@ function showGame(game, $container, maxWidth, maxHeight, showmovement, isminimal
                     str = game.frames[frame][y][x].strength;
                     prod = game.productions[y][x];
                     infoText.text = 'Str: ' + str.toString() + ' | Prod: ' + prod.toString();
+                    infoText2.text = `Position (x/y): ${x}/${y}`;
                 }
                 else if(mousepos.x < GRAPH_RIGHT && mousepos.x > GRAPH_LEFT) {
                     frame = firstFrame + Math.round((mousepos.x - GRAPH_LEFT) / dw);
